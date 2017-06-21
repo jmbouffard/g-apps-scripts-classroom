@@ -79,6 +79,10 @@ function onFormSubmit(e) {
     var td = tr.appendTableCell(responses[i].getItem().getTitle());
     td.setAttributes(boldStyle);
     //var tr = table.appendTableRow();
+	
+	// TEST: Check for response type (https://developers.google.com/apps-script/reference/forms/item-type)
+    //Logger.log("Response Type: "+responses[i].getItem().getType());
+	
 	// If item named "vidéo / photo :" then handle the value as a link to a Drive location.
     if (responses[i].getItem().getTitle() == "vidéo / photo :") {
       var td = tr.appendTableCell("https://drive.google.com/open?id="+responses[i].getResponse());
