@@ -53,46 +53,60 @@ function onFormSubmit(e) {
   var responses = e.response.getItemResponses();
   Logger.log("Number of responses: "+responses.length);
   
-  var fileName = responses[0].getResponse();
+  var fileNames;
+  if ((typeof responses[0].getResponse()) == "string")
+  {
+    // This path used if the filename is a dropbox selection (only one answer)
+    fileNames = [responses[0].getResponse()];
+  } else {
+    // This path used if the filename is a set of checkbox selections (multiple answers possible)
+    fileNames = responses[0].getResponse();
+  }
+  Logger.log("Number of names: "+fileNames.length);
 
-  //See if content folder exists, if not create
-  contentFolder = setContentFolder("Files");
+  for (var n = 0; n < fileNames.length; ++n) {
+    var fileName = fileNames[n];
+    Logger.log("Writing file: "+fileName);
   
-  //See if content file exists, if not create
-  contentFile = setContentFile(contentFolder, fileName);
-  
-  var document = DocumentApp.openById(contentFile.getId());
-  var body = document.getBody();
-  var table = body.appendTable();
-  
-  // Define a style with bold.
-  var boldStyle = {};
-  boldStyle[DocumentApp.Attribute.BOLD] = true;
-  // Define a style with normal.
-  var normalStyle = {};
-  normalStyle[DocumentApp.Attribute.BOLD] = false;
-  
-  for (var i = 1; i < responses.length; ++i) {
-    Logger.log("Q"+i+": "+responses[i].getItem().getTitle());
-    Logger.log("A"+i+": "+responses[i].getResponse());
-    var tr = table.appendTableRow();
-    var td = tr.appendTableCell(responses[i].getItem().getTitle());
-    td.setAttributes(boldStyle);
-    //var tr = table.appendTableRow();
-	
-	// TEST: Check for response type (https://developers.google.com/apps-script/reference/forms/item-type)
-    //Logger.log("Response Type: "+responses[i].getItem().getType());
-	
-	// If item named "vidéo / photo :" then handle the value as a link to a Drive location.
-    if (responses[i].getItem().getTitle() == "vidéo / photo :") {
-      var td = tr.appendTableCell("https://drive.google.com/open?id="+responses[i].getResponse());
-      // Define a style for links.
-      var linkStyle = {};
-      linkStyle[DocumentApp.Attribute.LINK_URL] = "https://drive.google.com/open?id="+responses[i].getResponse();
-      td.setAttributes(linkStyle);
-    } else {
-      var td = tr.appendTableCell(responses[i].getResponse());
-      td.setAttributes(normalStyle);
+    //See if content folder exists, if not create
+    contentFolder = setContentFolder("Files");
+    
+    //See if content file exists, if not create
+    contentFile = setContentFile(contentFolder, fileName);
+    
+    var document = DocumentApp.openById(contentFile.getId());
+    var body = document.getBody();
+    var table = body.appendTable();
+    
+    // Define a style with bold.
+    var boldStyle = {};
+    boldStyle[DocumentApp.Attribute.BOLD] = true;
+    // Define a style with normal.
+    var normalStyle = {};
+    normalStyle[DocumentApp.Attribute.BOLD] = false;
+    
+    for (var i = 1; i < responses.length; ++i) {
+      Logger.log("Q"+i+": "+responses[i].getItem().getTitle());
+      Logger.log("A"+i+": "+responses[i].getResponse());
+      var tr = table.appendTableRow();
+      var td = tr.appendTableCell(responses[i].getItem().getTitle());
+      td.setAttributes(boldStyle);
+      //var tr = table.appendTableRow();
+      
+      // TEST: Check for response type (https://developers.google.com/apps-script/reference/forms/item-type)
+      //Logger.log("Response Type: "+responses[i].getItem().getType());
+      
+	  // If item named "vidéo / photo :" then handle the value as a link to a Drive location.
+      if (responses[i].getItem().getTitle() == "vidéo / photo :") {
+        var td = tr.appendTableCell("https://drive.google.com/open?id="+responses[i].getResponse());
+        // Define a style for links.
+        var linkStyle = {};
+        linkStyle[DocumentApp.Attribute.LINK_URL] = "https://drive.google.com/open?id="+responses[i].getResponse();
+        td.setAttributes(linkStyle);
+      } else {
+        var td = tr.appendTableCell(responses[i].getResponse());
+        td.setAttributes(normalStyle);
+      }
     }
   }
   
