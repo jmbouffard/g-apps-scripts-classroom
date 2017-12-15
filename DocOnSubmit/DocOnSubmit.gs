@@ -131,9 +131,11 @@ function onFormSubmit(e) {
           // Define a style for links.
           var linkStyle = {};
           linkStyle[DocumentApp.Attribute.LINK_URL] = "https://drive.google.com/open?id="+imageNames[j];
-          linkStyle[DocumentApp.Attribute.MARGIN_BOTTOM] = 6;
           par.setAttributes(linkStyle);
+          par.setSpacingAfter(6);
         }
+        // Remove last item from the cell because it is an empty item
+        td.removeChild(td.getChild(td.getNumChildren()-1));
       } else {
         var td = tr.appendTableCell(responses[i].getResponse());
         td.setAttributes(normalStyle);
