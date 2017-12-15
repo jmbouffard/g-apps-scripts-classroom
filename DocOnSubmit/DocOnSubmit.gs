@@ -96,13 +96,27 @@ function onFormSubmit(e) {
       // TEST: Check for response type (https://developers.google.com/apps-script/reference/forms/item-type)
       //Logger.log("Response Type: "+responses[i].getItem().getType());
       
-	  // If item named "vidéo / photo :" then handle the value as a link to a Drive location.
-      if (responses[i].getItem().getTitle() == "vidéo / photo :") {
-        var td = tr.appendTableCell("https://drive.google.com/open?id="+responses[i].getResponse());
-        // Define a style for links.
-        var linkStyle = {};
-        linkStyle[DocumentApp.Attribute.LINK_URL] = "https://drive.google.com/open?id="+responses[i].getResponse();
-        td.setAttributes(linkStyle);
+	    // If item named "vidÃ©o / photo :" then handle the value as a link to a Drive location.
+      if (responses[i].getItem().getTitle() == "vidÃ©o / photo :") {
+        var imageNames;
+        if ((typeof responses[i].getResponse()) == "string")
+        {
+          // This path used if one image
+          imageNames = [responses[i].getResponse()];
+        } else {
+          // This path used if multiple images
+          imageNames = responses[i].getResponse();
+        }
+        Logger.log("Number of images submitted: "+imageNames.length);
+        var td = tr.appendTableCell();
+        for (var j = 0; j < imageNames.length; ++j) {
+          //var td = tr.appendTableCell("https://drive.google.com/open?id="+imageNames[j]);
+          var par = td.appendParagraph("https://drive.google.com/open?id="+imageNames[j]);
+          // Define a style for links.
+          var linkStyle = {};
+          linkStyle[DocumentApp.Attribute.LINK_URL] = "https://drive.google.com/open?id="+imageNames[j];
+          par.setAttributes(linkStyle);
+        }
       } else {
         var td = tr.appendTableCell(responses[i].getResponse());
         td.setAttributes(normalStyle);
