@@ -110,11 +110,12 @@ function onFormSubmit(e) {
         Logger.log("Number of images submitted: "+imageNames.length);
         var td = tr.appendTableCell();
         for (var j = 0; j < imageNames.length; ++j) {
-          //var td = tr.appendTableCell("https://drive.google.com/open?id="+imageNames[j]);
-          var par = td.appendParagraph("https://drive.google.com/open?id="+imageNames[j]);
+          //var par = td.appendParagraph("https://drive.google.com/open?id="+imageNames[j]);
+          var par = td.insertParagraph(j,"https://drive.google.com/open?id="+imageNames[j]);
           // Define a style for links.
           var linkStyle = {};
           linkStyle[DocumentApp.Attribute.LINK_URL] = "https://drive.google.com/open?id="+imageNames[j];
+          linkStyle[DocumentApp.Attribute.MARGIN_BOTTOM] = 6;
           par.setAttributes(linkStyle);
         }
       } else {
