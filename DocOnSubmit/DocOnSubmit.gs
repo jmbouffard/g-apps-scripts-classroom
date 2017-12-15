@@ -15,11 +15,12 @@
  * Adds a custom menu to the active form, containing a help item.
  */
  function onOpen() {
-  //Logger.log("onOpen called");
+  Logger.log("onOpen called");
   var ui = FormApp.getUi();
   ui.createMenu('DocOnSubmit')
       .addItem('Info', 'onAideClicked')
-      .addToUi();    
+      .addItem('Install Trigger', 'createFormSubmitTrigger')
+      .addToUi();
       /*.addSeparator()
       .addSubMenu(ui.createMenu('Sub-menu')
           .addItem('Second item', 'menuItem2'))
@@ -27,10 +28,27 @@
 };
 
 /**
+ * Verify if trigger was install and install it otherwise.
+ */
+function createFormSubmitTrigger() {
+  var form = FormApp.getActiveForm();
+  var triggers = ScriptApp.getProjectTriggers();
+  if (triggers.length == 0) {
+    FormApp.getUi().alert('Trigger installed on OnFormSubmit().');
+    ScriptApp.newTrigger('onFormSubmit')
+        .forForm(form)
+        .onFormSubmit()
+        .create();
+  } else {
+    FormApp.getUi().alert('Trigger alreay installed, no change were made.');
+  }
+}
+
+/**
  * Display help dialog.
  */
 function onAideClicked() {
-  FormApp.getUi().alert('Documents will be created in the Form\'s folder when user submits results!');
+  FormApp.getUi().alert('If documents are not created in the "Files" subfolder when\nsubmitting results, use the "Install Trigger" button.');
 };
 
 /**
@@ -91,12 +109,10 @@ function onFormSubmit(e) {
       var tr = table.appendTableRow();
       var td = tr.appendTableCell(responses[i].getItem().getTitle());
       td.setAttributes(boldStyle);
-      //var tr = table.appendTableRow();
-      
+            
       // TEST: Check for response type (https://developers.google.com/apps-script/reference/forms/item-type)
       //Logger.log("Response Type: "+responses[i].getItem().getType());
-      
-	    // If item named "vidéo / photo :" then handle the value as a link to a Drive location.
+      // If item named "vidéo / photo :" then handle the value as a link to a Drive location.
       if (responses[i].getItem().getTitle() == "vidéo / photo :") {
         var imageNames;
         if ((typeof responses[i].getResponse()) == "string")
