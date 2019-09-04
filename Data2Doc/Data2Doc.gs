@@ -12,9 +12,31 @@
  *
  **************************************************************************************/
 
+// Running the script with Today's date
+//  This was done to bypass the date selection dialog which was using the
+//  deprecated UiApp object 
+function startAppToday() {
+  var d = new Date();
+  SpreadsheetApp.getUi().alert('Cr√©ation du document pour le '+d);
+  // Processing document
+  readRows(d);
+}
+
+// Running the script with Tomorrow's date
+//  This was done to bypass the date selection dialog which was using the
+//  deprecated UiApp object 
+function startAppTomorrow() {
+  var MILLIS_PER_DAY = 1000 * 60 * 60 * 24;
+  var now = new Date();
+  var d = new Date(now.getTime() + MILLIS_PER_DAY);
+  SpreadsheetApp.getUi().alert('Cr√©ation du document pour le '+d);
+  // Processing document
+  readRows(d);
+}
+
 function startApp() {
   var app = UiApp.createApplication();
-  var introtxt = "SÈlectionnez la date de la liste ‡ produire et\nappuyez sur Continuer pour lancer la crÈation du document. \"Data2Doc result\" utilise le contenu des colonnes \"titre\" et \"nouvelles\"";
+  var introtxt = "S√©lectionnez la date de la liste √† produire et\nappuyez sur Continuer pour lancer la cr√©ation du document. \"Data2Doc result\" utilise le contenu des colonnes \"titre\" et \"nouvelles\"";
   //var textBoxA = app.createTextBox().setId('textBoxA').setName('Title');
   var currentdate = new Date();
   var label1 = app.createLabel(introtxt);
@@ -164,8 +186,11 @@ function readRows(docdate) {
 function onOpen() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet();
   var entries = [{
-    name : "Export rows to document",
-    functionName : "startApp"
+    name : "Export today's rows to document",
+    functionName : "startAppToday"
+  },{
+    name : "Export tomorrow's rows to document",
+    functionName : "startAppTomorrow"
   }];
   sheet.addMenu("Data2Doc", entries);
 };
