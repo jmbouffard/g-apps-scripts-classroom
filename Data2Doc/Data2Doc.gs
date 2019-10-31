@@ -34,6 +34,8 @@ function startAppTomorrow() {
   readRows(d);
 }
 
+/*
+// DEPRECATED UiApp
 function startApp() {
   var app = UiApp.createApplication();
   var introtxt = "Sélectionnez la date de la liste à produire et\nappuyez sur Continuer pour lancer la création du document. \"Data2Doc result\" utilise le contenu des colonnes \"titre\" et \"nouvelles\"";
@@ -56,7 +58,10 @@ function startApp() {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   spreadsheet.show(app);
 };
+*/
 
+/*
+// DEPRECATED UiApp
 function dateChangeHandler(eventInfo) {
   var app = UiApp.getActiveApplication();
   // Do stuff when date is changed
@@ -64,7 +69,10 @@ function dateChangeHandler(eventInfo) {
   //atetxt.setText(eventInfo.parameter.datebox);
   return app;
 };
+*/
 
+/*
+// DEPRECATED UiApp
 function continueHandler(e) {
   var app = UiApp.getActiveApplication();
   var d = new Date(e.parameter.datebox);
@@ -73,6 +81,7 @@ function continueHandler(e) {
   app.close();
   return app;
 };
+*/
 
 function getFile(child_folder, filename) {
   //var child_folder = DriveApp.getFolder('Annonces_RHJ');
@@ -98,7 +107,7 @@ function getFile(child_folder, filename) {
  * https://developers.google.com/apps-script/service_spreadsheet
  */
 function readRows(docdate) {
-  var app = UiApp.getActiveApplication();
+  //var app = UiApp.getActiveApplication();
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = SpreadsheetApp.getActiveSheet();
   var rows = sheet.getDataRange();
